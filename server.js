@@ -11,12 +11,12 @@ const database = {
         {
             username: 'User1',
             password: 'IamUserOne',
-            bidsPlaced: [0,1,2,3,4,5],
+            bidsPlaced: [0,0,0,0,0,0],
         },
         {
             username: 'User2',
             password: 'IamUserTwo',
-            bidsPlaced: [0,1,2,3,4,5],
+            bidsPlaced: [0,0,0,0,0,0],
         },
         {
             username: 'Admin',
