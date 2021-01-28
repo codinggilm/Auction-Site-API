@@ -84,7 +84,7 @@ app.put('/placeBid', (req, res) => {
         res.status(404).json('no such user');
     }
 })
-
+ 
 
 
 // Close bid, calculate winner and respond ************
@@ -96,9 +96,11 @@ io.on('connection', socket => {
         let i = bidId;
         
         if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
-            return socket.broadcast.emit('winner name', 'User1')
+            return socket.broadcast.emit('winner name', {name: 'User1', bid: i})
+
         } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]){
-            return socket.broadcast.emit('winner name', 'User2');
+            return socket.broadcast.emit('winner name', {name: 'User2', bid: i})
+            
         } else {
             return socket.broadcast.emit('winner name', 'no winner');
         } 
