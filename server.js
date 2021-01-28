@@ -1,10 +1,19 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
+const http = require('http');
+const socketio = require('socket.io');
+
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+
 
 app.use(express.json());
 app.use(cors());
+
+
+
 
 const database = {
     users: [
@@ -22,38 +31,18 @@ const database = {
             username: 'Admin',
             password: 'IamTheBoss'
         }
-    ],
-    bidStatus: [
-        {
-            status: 'open'
-        },
-        {
-            status: 'open'
-        },
-        {
-            status: 'open'
-        },
-        {
-            status: 'open'
-        },
-        {
-            status: 'open'
-        },
-        {
-            status: 'open'
-        }
     ]
 }
 
 
 
-//Home ***********************
+// Home ***********************
 
 app.get('/', (req,res) => {
     res.send(database);
 })
 
-//Signing *********************
+// Signing *********************
 
 app.post('/signin', (req, res) => {
     for (var i=0; i < database.users.length; i++) {
@@ -66,7 +55,7 @@ app.post('/signin', (req, res) => {
 })
 
 
-//Get profile ******************
+// Get profile ******************
 
 app.get('/profile/:username', (req, res) => {
     const username = req.params.username;
@@ -78,7 +67,7 @@ app.get('/profile/:username', (req, res) => {
     res.status(404).json('no such user');
 })
 
-// Update Bids V2 *****************
+// Update Bids *****************
 
 app.put('/placeBid', (req, res) => {
     const username  = req.body.username;
@@ -97,30 +86,28 @@ app.put('/placeBid', (req, res) => {
 })
 
 
-// Close Bids V2 ********************
 
-app.post('/closeBid', (req, res) => {
-    let i = req.body.bidId;
-    database.bidStatus[i].status = req.body.status;
-    res.json('bid  is now closed');
+// Close bid, calculate winner and respond ************
+
+io.on('connection', socket => {
+
+    socket.on('close this bid!', bidId => {
+
+        let i = bidId;
+        
+        if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
+            return socket.broadcast.emit('winner name', 'User1')
+        } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]){
+            return socket.broadcast.emit('winner name', 'User2');
+        } else {
+            return socket.broadcast.emit('winner name', 'no winner');
+        } 
+    })
 })
 
-// Get Results V2 ********************
-
-app.post('/results', (req, res) => {
-    let i = req.body.bidId;
-    if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
-        return res.json('User1 won this bid!');
-    } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]){
-        return res.json('User1 lost this bid!');
-    } else {
-        return res.json('no winner');
-    } 
-})
 
 
 
-
-app.listen(process.env.PORT || 3000, ()=> {
-    console.log(`app is running on port ${process.env.PORT}`);
+server.listen(process.env.PORT || 3000, () => {
+    console.log("server is running on port 3000")
 })
