@@ -91,7 +91,7 @@ app.put('/placeBid', (req, res) => {
 app.post('/resetBids', (req, res) => {
     database.users.forEach(user => {
         for(var i = 0; i < user.bidsPlaced.length; i++) {
-            user.bidsPlaced[i] = req.newValues;
+            user.bidsPlaced[i] = req.body.newValues;
         }
     })
 })
