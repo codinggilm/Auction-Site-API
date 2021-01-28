@@ -20,12 +20,12 @@ const database = {
         {
             username: 'User1',
             password: 'IamUserOne',
-            bidsPlaced: [0,0,0,0,0,0],
+            bidsPlaced: [0,0,0,0,0,0]
         },
         {
             username: 'User2',
             password: 'IamUserTwo',
-            bidsPlaced: [0,0,0,0,0,0],
+            bidsPlaced: [0,0,0,0,0,0]
         },
         {
             username: 'Admin',
@@ -84,8 +84,18 @@ app.put('/placeBid', (req, res) => {
         res.status(404).json('no such user');
     }
 })
- 
 
+
+// **** Reset all bids ******************************
+
+app.post('/resetBids', (req, res) => {
+    database.users.forEach(user => {
+        for(var i = 0; i < user.bidsPlaced.length; i++) {
+            user.bidsPlaced[i] = req.newValues;
+        }
+    })
+})
+ 
 
 // Close bid, calculate winner and respond ************
 
