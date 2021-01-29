@@ -2,13 +2,13 @@
  
 
 ## Description
-This server supports the UI of the auction site. It handles the requests and updates the (hardcoded) database accordingly. <br />
-Using Socket.IO, it allows real time UI update on the client side. <br />
-As an ongoing project, I plan to improve the code and functionality.
+This server supports the auction site client. It handles incoming requests and updates the (hardcoded) database accordingly. <br />
+Using Socket.IO, it allows the client's UI to update in real time. <br />
+
 
 ## Improving the server
-At the moment, if a user refreshes the page on the client side, the bid result message disappears and the user can keep biding. <br />
-I will re-implement the option to update the bid status on the back end to fix this. 
+Last update fixed the infite bidding possibility if a users logs out and sign in again, the client now checks the server for bid status everytime a user logs in. <br />
+Next update will implement Socket.IO to update the client's UI in real time when the Admin resets all bids.
 
 
 
@@ -19,7 +19,3 @@ I will re-implement the option to update the bid status on the back end to fix t
 * Socket.IO
 * NPM
 * POSTMAN
-<<<<<<< HEAD
-=======
-
->>>>>>> 01bfb9fb75dd7c13c7155a33231e9ffba4d2fd0b
