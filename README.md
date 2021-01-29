@@ -19,3 +19,7 @@ I will re-implement the option to update the bid status on the back end to fix t
 * Socket.IO
 * NPM
 * POSTMAN
+<<<<<<< HEAD
+=======
+
+>>>>>>> 01bfb9fb75dd7c13c7155a33231e9ffba4d2fd0b
