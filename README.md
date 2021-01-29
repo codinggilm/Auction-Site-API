@@ -10,6 +10,7 @@ As an ongoing project, I plan to improve the code and functionality.
 
 ## Technologies Used
 * NODE.JS
+* EXPRESS.JS
 * Socket.IO
 * NPM
 * POSTMAN
