@@ -91,25 +91,30 @@ app.put('/placeBid', (req, res) => {
 
 app.post('/resetBids', (req, res) => {
     database.users.forEach(user => {
+        // console.log(user.bidsPlaced)
         if (user.username !== 'Admin') {
             for(var i = 0; i < user.bidsPlaced.length; i++) {
                 user.bidsPlaced[i] = req.body.newValues;
             }
         }
     })
+    for (var i = 0; i < database.bidStatus.length; i++) {
+        database.bidStatus[i] = req.body.status;
+    }
 })
 
 // Check bid status on user login ********************
 
 app.post('/checkBidStatus', (req, res) => {
     let i = req.body.bidId;
-    if (database.bidStatus !== 'open') {
+    if (database.bidStatus[i] !== 'open') {
         if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
             return res.json('User1');
         } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]) {
             return res.json('User');
         }     
     }
+    return res.json('no winner')
 })
  
 
