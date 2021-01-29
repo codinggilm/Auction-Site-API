@@ -31,7 +31,8 @@ const database = {
             username: 'Admin',
             password: 'IamTheBoss'
         }
-    ]
+    ],
+    bidStatus:['open','open','open','open','open','open']
 }
 
 
@@ -90,14 +91,29 @@ app.put('/placeBid', (req, res) => {
 
 app.post('/resetBids', (req, res) => {
     database.users.forEach(user => {
-        for(var i = 0; i < user.bidsPlaced.length; i++) {
-            user.bidsPlaced[i] = req.body.newValues;
+        if (user.username !== 'Admin') {
+            for(var i = 0; i < user.bidsPlaced.length; i++) {
+                user.bidsPlaced[i] = req.body.newValues;
+            }
         }
     })
 })
+
+// Check bid status on user login ********************
+
+app.post('/checkBidStatus', (req, res) => {
+    let i = req.body.bidId;
+    if (database.bidStatus !== 'open') {
+        if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
+            return res.json('User1');
+        } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]) {
+            return res.json('User');
+        }     
+    }
+})
  
 
-// Close bid, calculate winner and respond ************
+// Close bid, calculate winner and responds ************
 
 io.on('connection', socket => {
 
@@ -106,9 +122,11 @@ io.on('connection', socket => {
         let i = bidId;
         
         if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
+            database.bidStatus[i] = 'closed, user1 won';
             return socket.broadcast.emit('winner name', {name: 'User1', bid: i})
 
-        } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]){
+        } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]) {
+            database.bidStatus[i] = 'closed, user2 won';
             return socket.broadcast.emit('winner name', {name: 'User2', bid: i})
             
         } else {
