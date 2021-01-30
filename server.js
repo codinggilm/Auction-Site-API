@@ -84,44 +84,27 @@ app.put('/placeBid', (req, res) => {
     if (!found) {
         res.status(404).json('no such user');
     }
-})
+}) 
 
-
-// **** Reset all bids ******************************
-
-app.post('/resetBids', (req, res) => {
-    database.users.forEach(user => {
-        // console.log(user.bidsPlaced)
-        if (user.username !== 'Admin') {
-            for(var i = 0; i < user.bidsPlaced.length; i++) {
-                user.bidsPlaced[i] = req.body.newValues;
-            }
-        }
-    })
-    for (var i = 0; i < database.bidStatus.length; i++) {
-        database.bidStatus[i] = req.body.status;
-    }
-})
 
 // Check bid status on user login ********************
-
 app.post('/checkBidStatus', (req, res) => {
     let i = req.body.bidId;
     if (database.bidStatus[i] !== 'open') {
         if (database.users[0].bidsPlaced[i] > database.users[1].bidsPlaced[i]) {
             return res.json('User1');
         } else if (database.users[0].bidsPlaced[i] < database.users[1].bidsPlaced[i]) {
-            return res.json('User');
+            return res.json('User2');
         }     
     }
     return res.json('no winner')
 })
  
 
-// Close bid, calculate winner and responds ************
 
 io.on('connection', socket => {
 
+    // Close bid, calculate winner and responds
     socket.on('close this bid!', bidId => {
 
         let i = bidId;
@@ -137,6 +120,22 @@ io.on('connection', socket => {
         } else {
             return socket.broadcast.emit('winner name', 'no winner');
         } 
+    })
+
+    // Reset all bids and status
+    socket.on('reset bids', () => {
+        database.users.forEach(user => {
+            if (user.username !== 'Admin') {
+                for(var i = 0; i < user.bidsPlaced.length; i++) {
+                    user.bidsPlaced[i] = 0;
+                }
+            }
+        })
+        for (var i = 0; i < database.bidStatus.length; i++) {
+            database.bidStatus[i] = 'open';
+        }
+
+        socket.broadcast.emit('bids have been reset')
     })
 })
 
