@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const socketio = require('socket.io');
-
 
 const app = express();
 const server = http.createServer(app);
+
+const socketio = require('socket.io');
 const io = socketio(server, {
     cors: {
-      origin: "https://auction-site-front.herokuapp.com/",
+      origin: "http://auction-site-front.herokuapp.com/",
       methods: ["GET", "POST", "PUT"],
       credentials: true
     }
