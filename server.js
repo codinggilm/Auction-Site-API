@@ -6,7 +6,13 @@ const socketio = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+    cors: {
+      origin: "https://auction-site-front.herokuapp.com/",
+      methods: ["GET", "POST", "PUT"],
+      credentials: true
+    }
+});
 
 
 app.use(express.json());
@@ -67,7 +73,7 @@ app.get('/profile/:username', (req, res) => {
     })
     res.status(404).json('no such user');
 })
-
+ 
 // Update Bids *****************
 
 app.put('/placeBid', (req, res) => {
