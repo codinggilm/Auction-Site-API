@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const socketio = require('socket.io');
 const io = socketio(server, {
     cors: {
-      origin: "http://auction-site-front.herokuapp.com/",
+      origin: "https://auction-site-front.herokuapp.com",
       methods: ["GET", "POST", "PUT"],
       credentials: true
     }
